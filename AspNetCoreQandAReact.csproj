@@ -4,21 +4,5 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="frontend\src\HomePage.tsx" />
-    <None Remove="frontend\src\Icons.tsx" />
-    <None Remove="frontend\src\QuestionData.ts\IAnswerData.ts" />
-    <None Remove="frontend\src\QuestionData.ts\IQuestionData.ts" />
-    <None Remove="frontend\src\Styles.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Include="frontend\src\HomePage.tsx" />
-    <TypeScriptCompile Include="frontend\src\Icons.tsx" />
-    <TypeScriptCompile Include="frontend\src\QuestionData.ts\IAnswerData.ts" />
-    <TypeScriptCompile Include="frontend\src\QuestionData.ts\IQuestionData.ts" />
-    <TypeScriptCompile Include="frontend\src\Styles.ts" />
-  </ItemGroup>
-
 
 </Project>
