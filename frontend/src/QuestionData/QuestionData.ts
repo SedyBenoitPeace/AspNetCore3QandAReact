@@ -1,4 +1,4 @@
-﻿import { AnswerData } from "./IAnswerData";
+import { AnswerData } from "./IAnswerData";
 
 export interface QuestionData {
     questionId: number;
@@ -6,8 +6,8 @@ export interface QuestionData {
     content: string;
     userName: string;
     created: Date;
-    Answers: AnswerData[];
-}
+    answers: AnswerData[];
+    };
 
 const questions: QuestionData[] = [
     {
@@ -17,7 +17,7 @@ const questions: QuestionData[] = [
             'TypeScript seems to be getting popular so I wondered whether it is worth my time learning it? What benefits does it give over JavaScript?',
         userName: 'Bob',
         created: new Date(),
-        Answers: [
+        answers: [
             {
                 answerId: 1,
                 content: 'To catch problems earlier speeding up your developments',
@@ -40,10 +40,10 @@ const questions: QuestionData[] = [
             'There seem to be a fair few state management tools around for React - React, Unstated, ...Which one should I use?',
         userName: 'Bob',
         created: new Date(),
-        Answers: [],
+        answers: [],
     },
 ];
 
 export const getUnansweredQuestions = (): QuestionData[] => {
-    return questions.filter(q => q.Answers.length === 0);
+    return questions.filter(q => q.answers.length === 0);
 };
