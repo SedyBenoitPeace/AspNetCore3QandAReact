@@ -1,4 +1,4 @@
-import { AnswerData } from "./IAnswerData";
+import { AnswerData } from "./AnswerData";
 
 export interface QuestionData {
     questionId: number;
@@ -51,4 +51,13 @@ const wait = (ms: number): Promise<void> => {
 export const getUnansweredQuestions = async (): Promise<QuestionData[]> => {
     await wait(500);
     return questions.filter(q => q.answers.length === 0);
+};
+
+export const getQuestion = async (
+    questionId: number
+): Promise<QuestionData | null> => {
+    await wait(500);
+    const results
+        = questions.filter(q => q.questionId === questionId);
+    return results.length === 0 ? null : results[0];
 };
