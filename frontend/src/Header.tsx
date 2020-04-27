@@ -1,11 +1,15 @@
-﻿import React from 'react';
+﻿import React, {ChangeEvent} from 'react';
 import { UserIcon } from './Icons';
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
-import { fontFamily, fontSize, gray1,gray2,gray5 } from './Styles';
+import { fontFamily, fontSize, gray1, gray2, gray5 } from './Styles';
 
 
-export const Header = () => 
+export const Header = () => {
+    const handleSearchInputChange = (e:ChangeEvent<HTMLInputElement>) => {
+        console.log(e.currentTarget.value);
+    };
+    return (
     <div css={css`
             position: fixed;
             box-sizing: border-box;
@@ -41,7 +45,7 @@ export const Header = () =>
                 outline-color: ${gray5};
                 }
                 `}
-            type="text" placeholder="Search..." />
+            type="text" placeholder="Search..." onChange={handleSearchInputChange} />
         <UserIcon />
         <a href="./signin" css={css`
                 font-family: ${fontFamily};
@@ -59,4 +63,6 @@ export const Header = () =>
                 }
                 `}
         ><span>Sign In</span></a>
-    </div>;
+    </div>
+    )
+};
