@@ -1,16 +1,24 @@
-﻿import React, {ChangeEvent} from 'react';
+﻿import React, { ChangeEvent, FC, useState } from 'react';
 import { UserIcon } from './Icons';
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import { fontFamily, fontSize, gray1, gray2, gray5 } from './Styles';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
-export const Header = () => {
-    const handleSearchInputChange = (e:ChangeEvent<HTMLInputElement>) => {
-        console.log(e.currentTarget.value);
+export const Header: FC<RouteComponentProps> = (
+    {
+        history,
+        location
+    }
+) => {
+    const searchParams = new URLSearchParams(location.search);
+    const criteria = searchParams.get('criteria') || '';
+    const handleSearchInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setSearch(e.currentTarget.value);
     };
+    const [search, setSearch] = useState(criteria);
     return (
-    <div css={css`
+        <div css={css`
             position: fixed;
             box-sizing: border-box;
             top: 0;
@@ -23,14 +31,15 @@ export const Header = () => {
             border-bottom: 1px solid ${gray5};
             box-shadow: 0 3px 7px 0 rgba(110, 112, 114, 0.21);
             `}>
-        <Link to='/' css={css`
+            <Link to='/' css={css`
                 font-size: 24px;
                 font-weight: bold;
                 color: ${gray1};
                 text-decoration: none;
                 `} href="./">Q & A
             </Link>
-        <input css={css`
+            <form>
+                <input css={css`
                 box-sizing: border-box;
                 font-family: ${fontFamily};
                 font-size: ${fontSize};
@@ -45,9 +54,10 @@ export const Header = () => {
                 outline-color: ${gray5};
                 }
                 `}
-            type="text" placeholder="Search..." onChange={handleSearchInputChange} />
-        <UserIcon />
-        <Link to ="/signin" href="./signin" css={css`
+                    type="text" placeholder="Search..." value={search} onChange={handleSearchInputChange} />
+            </form>
+            <UserIcon />
+            <Link to="/signin" href="./signin" css={css`
                 font-family: ${fontFamily};
                 font-size: ${fontSize};
                 padding: 5px 10px;
@@ -62,7 +72,9 @@ export const Header = () => {
                 outline-color: ${gray5};
                 }
                 `}
-        ><span>Sign In</span></Link>
-    </div>
+            ><span>Sign In</span></Link>
+        </div>
     )
 };
+
+export const HeaderWithRouter = withRouter(Header);
