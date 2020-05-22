@@ -4,6 +4,7 @@ import { UserIcon } from './Icons';
 import { css, jsx } from '@emotion/core';
 import { fontFamily, fontSize, gray1, gray2, gray5 } from './Styles';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { Form } from './Form';
 
 export const Header: FC<RouteComponentProps> = (
     {
@@ -15,6 +16,10 @@ export const Header: FC<RouteComponentProps> = (
     const criteria = searchParams.get('criteria') || '';
     const handleSearchInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setSearch(e.currentTarget.value);
+    };
+    const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        history.push(`/search?criteria=${search}`);
     };
     const [search, setSearch] = useState(criteria);
     return (
@@ -38,23 +43,28 @@ export const Header: FC<RouteComponentProps> = (
                 text-decoration: none;
                 `} href="./">Q & A
             </Link>
-            <form>
-                <input css={css`
-                box-sizing: border-box;
-                font-family: ${fontFamily};
-                font-size: ${fontSize};
-                padding: 8px 10px;
-                border: 1px solid ${gray5};
-                border-radius: 3px;
-                color: ${gray2};
-                background-color: white;
-                width: 200px;
-                height: 30px;
-                :focus {
-                outline-color: ${gray5};
-                }
+            <form onSubmit={handleSearchSubmit}>
+                <input
+                    type="text"
+                    placeholder="Search..."
+                    onChange={handleSearchInputChange}
+                    value={search}
+                    css={css`
+                    box-sizing: border-box;
+                    font-family: ${fontFamily};
+                    font-size: ${fontSize};
+                    padding: 8px 10px;
+                    border: 1px solid ${gray5};
+                    border-radius: 3px;
+                    color: ${gray2};
+                    background-color: white;
+                    width: 200px;
+                    height: 30px;
+                    :focus {
+                    outline-color: ${gray5};
+                    }
                 `}
-                    type="text" placeholder="Search..." value={search} onChange={handleSearchInputChange} />
+                />
             </form>
             <UserIcon />
             <Link to="/signin" href="./signin" css={css`

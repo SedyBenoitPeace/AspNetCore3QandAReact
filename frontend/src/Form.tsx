@@ -1,4 +1,4 @@
-import React, { FC, useState, createContext, FormEvent } from 'react';
+import React, { FC, useState, createContext } from 'react';
 import { PrimaryButton, gray5, gray6 } from './Styles';
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
@@ -100,7 +100,7 @@ export const Form: FC<Props> = ({
     return fieldErrors;
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateForm()) {
       setSubmitting(true);
