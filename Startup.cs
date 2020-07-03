@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreQandAReact.Data;
+using AspNetCoreQandAReact.Hubs;
 using DbUp;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,6 +36,8 @@ namespace AspNetCoreQandAReact
                 upgrader.PerformUpgrade();
             }
             services.AddScoped<IDataRepository, DataRepository>();
+            services.AddCors(options => options.AddPolicy("CorsPolicy", builder => builder.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000").AllowCredentials()));
+            services.AddSignalR();
             services.AddControllers();
         }
 
@@ -52,11 +55,15 @@ namespace AspNetCoreQandAReact
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseCors("CorsPolicy");
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<QuestionsHub>("/questionshub");
             });
+
+            
         }
     }
 }

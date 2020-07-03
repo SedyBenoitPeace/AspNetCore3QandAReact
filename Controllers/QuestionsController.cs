@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using AspNetCoreQandAReact.Data;
 using AspNetCoreQandAReact.Data.Models;
 using QandA.Data.Models;
+using Microsoft.AspNetCore.SignalR;
+using AspNetCoreQandAReact.Hubs;
 
 namespace AspNetCoreQandAReact.Controllers
 {
@@ -15,9 +17,11 @@ namespace AspNetCoreQandAReact.Controllers
     public class QuestionsController : ControllerBase
     {
         private readonly IDataRepository _dataRepository;
-        public QuestionsController(IDataRepository dataRepository)
+        private readonly IHubContext<QuestionsHub> _questionHubContext;
+        public QuestionsController(IDataRepository dataRepository, IHubContext<QuestionsHub> questionHubContext)
         {
             _dataRepository = dataRepository;
+            _questionHubContext = questionHubContext;
         }
 
         [HttpGet]
@@ -108,6 +112,7 @@ namespace AspNetCoreQandAReact.Controllers
                 UserName = "bob.test@test.com",
                 Created = DateTime.UtcNow
             });
+            _questionHubContext.Clients.Group($"Question-{answerPostRequest.QuestionId.Value}").SendAsync("ReceiveQuestion", _dataRepository.GetQuestion(answerPostRequest.QuestionId.Value));
             return savedAnswer;
         }
 

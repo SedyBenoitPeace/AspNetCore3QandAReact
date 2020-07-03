@@ -79,38 +79,64 @@ export interface PostQuestionData {
     content: string;
     userName: string;
     created: Date;
-  }
-  
-  export const postQuestion = async (
+}
+
+export const postQuestion = async (
     question: PostQuestionData,
-  ): Promise<QuestionData | undefined> => {
+): Promise<QuestionData | undefined> => {
     await wait(500);
     const questionId = Math.max(...questions.map(q => q.questionId)) + 1;
     const newQuestion: QuestionData = {
-      ...question,
-      questionId,
-      answers: [],
+        ...question,
+        questionId,
+        answers: [],
     };
     questions.push(newQuestion);
     return newQuestion;
-  };
-  
-  export interface PostAnswerData {
+};
+
+export interface PostAnswerData {
     questionId: number;
     content: string;
     userName: string;
     created: Date;
-  }
-  
-  export const postAnswer = async (
+}
+
+export const postAnswer = async (
     answer: PostAnswerData,
-  ): Promise<AnswerData | undefined> => {
+): Promise<AnswerData | undefined> => {
     await wait(500);
     const question = questions.filter(q => q.questionId === answer.questionId)[0];
     const answerInQuestion: AnswerData = {
-      answerId: 99,
-      ...answer,
+        answerId: 99,
+        ...answer,
     };
     question.answers.push(answerInQuestion);
     return answerInQuestion;
-  };
+};
+
+export interface QuestionDataFromServer {
+    questionId: number;
+    title: string;
+    content: string;
+    userName: string;
+    created: string;
+    answers: AnswerDataFromServer[];
+}
+export interface AnswerDataFromServer {
+    answerId: number;
+    content: string;
+    userName: string;
+    created: string;
+}
+
+export const mapQuestionFromServer = (
+    question: QuestionDataFromServer,
+): QuestionData => ({
+    ...question,
+    created: new Date(question.created.substr(0, 19)),
+    answers: question.answers.map(answer => ({
+        ...answer,
+        created: new Date(answer.created.substr(0, 19)),
+    })),
+});
