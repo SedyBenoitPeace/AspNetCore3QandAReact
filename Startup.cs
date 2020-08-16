@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCoreQandAReact.Data;
+using AspNetCoreQandAReact.Hubs;
+using DbUp;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -25,6 +28,16 @@ namespace AspNetCoreQandAReact
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            EnsureDatabase.For.SqlDatabase(connectionString);
+            var upgrader = DeployChanges.To.SqlDatabase(connectionString, null).WithScriptsEmbeddedInAssembly(System.Reflection.Assembly.GetExecutingAssembly()).WithTransaction().Build();
+            if (upgrader.IsUpgradeRequired())
+            {
+                upgrader.PerformUpgrade();
+            }
+            services.AddScoped<IDataRepository, DataRepository>();
+            services.AddCors(options => options.AddPolicy("CorsPolicy", builder => builder.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000").AllowCredentials()));
+            services.AddSignalR();
             services.AddControllers();
         }
 
@@ -42,11 +55,15 @@ namespace AspNetCoreQandAReact
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseCors("CorsPolicy");
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<QuestionsHub>("/questionshub");
             });
+
+            
         }
     }
 }
